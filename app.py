@@ -27,11 +27,11 @@ async def on_chat_start():
     print(file) # Print the file object for debugging
     
      # Sending an image with the local file path
-    elements = [
+    ''' elements = [
     cl.Image(name="image", display="inline", path="pic.jpg")
-    ]
+    ] '''
     # Inform the user that processing has started
-    msg = cl.Message(content=f"Processing `{file.name}`...",elements=elements)
+    msg = cl.Message(content=f"Processing `{file.name}`...")
     await msg.send()
 
     # Read the PDF file
