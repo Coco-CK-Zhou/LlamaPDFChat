@@ -9,6 +9,17 @@ from langchain.memory import ChatMessageHistory, ConversationBufferMemory
 import chainlit as cl
 
 
+# import re
+# from pdfminer.high_level import extract_pages, extract_text
+# import streamlit
+
+def get_pdf_text(pdf_docs):
+    pdf_text = ""
+    for pdf in pdf_docs:
+        pdf_reader = PyPDF2.PdfReader(pdf.path)
+        for page in pdf_reader.pages:
+            pdf_text += page.extract_text()
+    return pdf_text
 
 @cl.on_chat_start
 async def on_chat_start():
@@ -21,9 +32,11 @@ async def on_chat_start():
             accept=["application/pdf"],
             max_size_mb=100,# Optionally limit the file size
             timeout=180, # Set a timeout for user response,
+            max_files=10,
         ).send()
 
     file = files[0] # Get the first uploaded file
+    
     print(file) # Print the file object for debugging
     
      # Sending an image with the local file path
@@ -31,14 +44,18 @@ async def on_chat_start():
     cl.Image(name="image", display="inline", path="pic.jpg")
     ] '''
     # Inform the user that processing has started
-    msg = cl.Message(content=f"Processing `{file.name}`...")
+    msg = cl.Message(content=f"Processing documents...")
     await msg.send()
 
+    pdf_text = get_pdf_text(files)
+
+    '''
     # Read the PDF file
     pdf = PyPDF2.PdfReader(file.path)
     pdf_text = ""
     for page in pdf.pages:
         pdf_text += page.extract_text()
+    '''
         
 
     # Split the text into chunks
@@ -76,7 +93,11 @@ async def on_chat_start():
     )
 
     # Let the user know that the system is ready
-    msg.content = f"Processing `{file.name}` done. You can now ask questions!"
+    msg.content = f"Processing "
+    for pdf in files:
+        msg.content += f"`{file.name}` "
+    msg.content += f" done. You can now ask questions!"
+    # msg.content = f"Processing `{file.name}` done. You can now ask questions!"
     await msg.update()
     #store the chain in user session
     cl.user_session.set("chain", chain)
