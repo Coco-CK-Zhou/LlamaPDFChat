@@ -1,5 +1,7 @@
 chainlit==1.0.200
+# streamlit
 langchain
 langchain_community
 PyPDF2
 chromadb
+pdfminer.six

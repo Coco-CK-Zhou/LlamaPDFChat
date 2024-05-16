@@ -8,7 +8,6 @@ from langchain_community.chat_models import ChatOllama
 from langchain.memory import ChatMessageHistory, ConversationBufferMemory
 import chainlit as cl
 
-
 # import re
 # from pdfminer.high_level import extract_pages, extract_text
 # import streamlit
@@ -34,30 +33,11 @@ async def on_chat_start():
             timeout=180, # Set a timeout for user response,
             max_files=10,
         ).send()
-
-    file = files[0] # Get the first uploaded file
-    
-    print(file) # Print the file object for debugging
-    
-     # Sending an image with the local file path
-    ''' elements = [
-    cl.Image(name="image", display="inline", path="pic.jpg")
-    ] '''
-    # Inform the user that processing has started
+   
     msg = cl.Message(content=f"Processing documents...")
     await msg.send()
-
     pdf_text = get_pdf_text(files)
-
-    '''
-    # Read the PDF file
-    pdf = PyPDF2.PdfReader(file.path)
-    pdf_text = ""
-    for page in pdf.pages:
-        pdf_text += page.extract_text()
-    '''
         
-
     # Split the text into chunks
     text_splitter = RecursiveCharacterTextSplitter(chunk_size=1200, chunk_overlap=50)
     texts = text_splitter.split_text(pdf_text)
@@ -95,9 +75,8 @@ async def on_chat_start():
     # Let the user know that the system is ready
     msg.content = f"Processing "
     for pdf in files:
-        msg.content += f"`{file.name}` "
+        msg.content += f"`{pdf.name}` "
     msg.content += f" done. You can now ask questions!"
-    # msg.content = f"Processing `{file.name}` done. You can now ask questions!"
     await msg.update()
     #store the chain in user session
     cl.user_session.set("chain", chain)
