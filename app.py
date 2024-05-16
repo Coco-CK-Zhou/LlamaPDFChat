@@ -8,6 +8,11 @@ from langchain_community.chat_models import ChatOllama
 from langchain.memory import ChatMessageHistory, ConversationBufferMemory
 import chainlit as cl
 
+from filetype import guess
+from pdf2image import convert_from_path
+from pytesseract import image_to_string
+from PIL import Image
+
 # import re
 # from pdfminer.high_level import extract_pages, extract_text
 # import streamlit
@@ -15,10 +20,52 @@ import chainlit as cl
 def get_pdf_text(pdf_docs):
     pdf_text = ""
     for pdf in pdf_docs:
+        pdf_text += extract_file_content(pdf.path)
+        '''
         pdf_reader = PyPDF2.PdfReader(pdf.path)
         for page in pdf_reader.pages:
             pdf_text += page.extract_text()
+            '''
     return pdf_text
+
+def convert_pdf_to_image(pdf_file): 
+    return convert_from_path(pdf_file)
+
+def convert_image_to_text(pdf_file):
+    return image_to_string(pdf_file)
+
+def detect_document_type(document_path):
+    
+    guess_file = guess(document_path)
+    file_type = ""
+    image_types = ['jpg', 'jpeg', 'png', 'gif']
+    
+    if(guess_file.extension.lower() == "pdf"):
+        file_type = "pdf" 
+    elif(guess_file.extension.lower() in image_types):
+        file_type = "image"
+    else:
+        file_type = "unkown"
+        
+    return file_type
+
+def extract_file_content(file_path):
+    documents_content = ""
+    
+    file_type = detect_document_type(file_path)
+    
+    if(file_type == "pdf"):
+        pdf_reader = PyPDF2.PdfReader(file_path)
+        for page in pdf_reader.pages:
+            documents_content += page.extract_text()
+        # scanned pdf where OCR required to extract text
+        if (documents_content == ""):
+            images = convert_pdf_to_image(file_path)
+            for pg, img in enumerate(images):
+                documents_content += convert_image_to_text(img)
+    elif(file_type == "image"):
+        documents_content +=convert_image_to_text(file_path)
+    return documents_content
 
 @cl.on_chat_start
 async def on_chat_start():
@@ -30,7 +77,7 @@ async def on_chat_start():
             content="Please upload a pdf file to begin!",
             accept=["application/pdf"],
             max_size_mb=100,# Optionally limit the file size
-            timeout=180, # Set a timeout for user response,
+            timeout=600, # Set a timeout for user response,
             max_files=10,
         ).send()
    

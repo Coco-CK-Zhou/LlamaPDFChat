@@ -4,4 +4,9 @@ langchain
 langchain_community
 PyPDF2
 chromadb
-pdfminer.six
+#pdfminer.six
+
+pytesseract
+pdf2image
+
+# remember to install ollama (llama3) and poppler and tesseract (brew install poppler / brew install tesseract)
