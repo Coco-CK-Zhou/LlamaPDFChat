@@ -37,7 +37,7 @@ def convert_image_to_text(pdf_file):
 
 def get_pdf_elements(pdf_file):
     raw_pdf_elements = partition_pdf(
-        filename=pdf_file + "wildfire_stats.pdf",
+        filename=pdf_file,
         extract_images_in_pdf=True,
         infer_table_structure=True,
         chunking_strategy="by_title",
@@ -46,14 +46,7 @@ def get_pdf_elements(pdf_file):
         combine_text_under_n_chars=2000,
         image_output_dir_path=pdf_file,
     )
-
-    tables = []
-    texts = []
-    for element in raw_pdf_elements:
-        if "unstructured.documents.elements.Table" in str(type(element)):
-            tables.append(str(element))
-        elif "unstructured.documents.elements.CompositeElement" in str(type(element)):
-            texts.append(str(element))
+    return raw_pdf_elements
 
 def detect_document_type(document_path):
     
@@ -79,6 +72,14 @@ def extract_file_content(file_path):
         pdf_reader = PyPDF2.PdfReader(file_path)
         for page in pdf_reader.pages:
             documents_content += page.extract_text()
+        '''raw_pdf_elements = get_pdf_elements(file_path)
+        tables = []
+        # texts = []
+        for element in raw_pdf_elements:
+            if "unstructured.documents.elements.Table" in str(type(element)):
+                tables.append(str(element))
+            elif "unstructured.documents.elements.CompositeElement" in str(type(element)):
+                documents_content += (str(element))'''
         # scanned pdf where OCR required to extract text
         if (documents_content == ""):
             images = convert_pdf_to_image(file_path)
