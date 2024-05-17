@@ -12,6 +12,7 @@ from filetype import guess
 from pdf2image import convert_from_path
 from pytesseract import image_to_string
 from PIL import Image
+from unstructured.partition.pdf import partition_pdf
 
 # import re
 # from pdfminer.high_level import extract_pages, extract_text
@@ -33,6 +34,26 @@ def convert_pdf_to_image(pdf_file):
 
 def convert_image_to_text(pdf_file):
     return image_to_string(pdf_file)
+
+def get_pdf_elements(pdf_file):
+    raw_pdf_elements = partition_pdf(
+        filename=pdf_file + "wildfire_stats.pdf",
+        extract_images_in_pdf=True,
+        infer_table_structure=True,
+        chunking_strategy="by_title",
+        max_characters=4000,
+        new_after_n_chars=3800,
+        combine_text_under_n_chars=2000,
+        image_output_dir_path=pdf_file,
+    )
+
+    tables = []
+    texts = []
+    for element in raw_pdf_elements:
+        if "unstructured.documents.elements.Table" in str(type(element)):
+            tables.append(str(element))
+        elif "unstructured.documents.elements.CompositeElement" in str(type(element)):
+            texts.append(str(element))
 
 def detect_document_type(document_path):
     

@@ -8,5 +8,7 @@ chromadb
 
 pytesseract
 pdf2image
+unstructured[all-docs]
 
 # remember to install ollama (llama3) and poppler and tesseract (brew install poppler / brew install tesseract)
+# sudo apt-get install poppler-utils tesseract-ocr
