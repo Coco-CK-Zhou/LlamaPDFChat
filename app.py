@@ -12,10 +12,17 @@ from filetype import guess
 from pdf2image import convert_from_path
 from pytesseract import image_to_string
 from PIL import Image
-from unstructured.partition.pdf import partition_pdf
+
+# from unstructured.partition.pdf import partition_pdf
+
+# from llama_parse import LlamaParse
+# from dotenv import load_dotenv
+# load_dotenv() 
+# import os
 
 # import re
-# from pdfminer.high_level import extract_pages, extract_text
+from pdfminer.high_level import extract_pages, extract_text
+
 # import streamlit
 
 def get_pdf_text(pdf_docs):
@@ -35,7 +42,7 @@ def convert_pdf_to_image(pdf_file):
 def convert_image_to_text(pdf_file):
     return image_to_string(pdf_file)
 
-def get_pdf_elements(pdf_file):
+'''def get_pdf_elements(pdf_file):
     raw_pdf_elements = partition_pdf(
         filename=pdf_file,
         extract_images_in_pdf=True,
@@ -46,7 +53,7 @@ def get_pdf_elements(pdf_file):
         combine_text_under_n_chars=2000,
         image_output_dir_path=pdf_file,
     )
-    return raw_pdf_elements
+    return raw_pdf_elements'''
 
 def detect_document_type(document_path):
     
@@ -108,7 +115,7 @@ async def on_chat_start():
     pdf_text = get_pdf_text(files)
         
     # Split the text into chunks
-    text_splitter = RecursiveCharacterTextSplitter(chunk_size=1200, chunk_overlap=50)
+    text_splitter = RecursiveCharacterTextSplitter(chunk_size=600, chunk_overlap=50)
     texts = text_splitter.split_text(pdf_text)
 
     # Create a metadata for each chunk
@@ -153,6 +160,7 @@ async def on_chat_start():
 
 @cl.on_message
 async def main(message: cl.Message):
+    
      # Retrieve the chain from user session
     chain = cl.user_session.get("chain") 
     #call backs happens asynchronously/parallel 

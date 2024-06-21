@@ -1,14 +1,23 @@
+wheel
 chainlit==1.0.200
 # streamlit
 langchain
 langchain_community
 PyPDF2
 chromadb
-#pdfminer.six
+pdfminer.six
 
 pytesseract
 pdf2image
+#unstructured[all-docs]
+# unstructured
 unstructured[all-docs]
+llama-parse==0.1.3
+
+python-dotenv
+groq
+langchain-groq
+
 
 # remember to install ollama (llama3) and poppler and tesseract (brew install poppler / brew install tesseract)
 # sudo apt-get install poppler-utils tesseract-ocr

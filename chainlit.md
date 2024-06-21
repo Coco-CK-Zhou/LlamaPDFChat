@@ -1,14 +1,33 @@
-# Welcome to Chainlit! 🚀🤖
+# Tax Form Project
+## Introduction
+PDF Chat is a locally hosted application that takes in PDFs and answers questions based on the context given. 
 
-Hi there, Developer! 👋 We're excited to have you on board. Chainlit is a powerful tool designed to help you prototype, debug and share applications built on top of LLMs.
+## Installation 
+1. Clone the repositiory to your local machine
+2. Create a virtual environment by running the following commands: 
+```
+python3 -m venv .venv
+source .venv/bin/activate
+```
+3. Download the ollama application and install llama3 onto your machine
+4. Install poppler and tesseract by run the following commands: 
 
-## Useful Links 🔗
+Mac/Linux (install brew): 
+```
+brew install poppler
+brew install tesseract
+```
+Windows: 
+```
+sudo apt-get install poppler-utils tesseract-ocr
+```
+5. Install the required dependencies by running the following command: 
+```
+pip install -r requirements.txt
+```
 
-- **Documentation:** Get started with our comprehensive [Chainlit Documentation](https://docs.chainlit.io) 📚
-- **Discord Community:** Join our friendly [Chainlit Discord](https://discord.gg/k73SQ3FyUh) to ask questions, share your projects, and connect with other developers! 💬
-
-We can't wait to see what you create with Chainlit! Happy coding! 💻😊
-
-## Welcome screen
-
-To modify the welcome screen, edit the `chainlit.md` file at the root of your project. If you do not want a welcome screen, just leave this file empty.
+## Usage
+To run the program, use the following command. 
+```
+chainlit run app.py
+```
