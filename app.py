@@ -140,7 +140,8 @@ async def on_chat_start():
 
     # Create a chain that uses the Chroma vector store
     chain = ConversationalRetrievalChain.from_llm(
-        Ollama(model="llama3"),
+        Ollama(model="llama3.1"),
+        #Ollama(model="llama3"),
         # ChatOllama(model="gemma:7b"),
         chain_type="stuff",
         retriever=docsearch.as_retriever(),
