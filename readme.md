@@ -1,4 +1,4 @@
-# Tax Form Project
+# Llama PDF Chat Project
 ## Introduction
 PDF Chat is a locally hosted application that takes in PDFs and answers questions based on the context given. 
 
